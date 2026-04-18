@@ -284,7 +284,7 @@ function EntryCard({ entry, index, expanded, onToggle, updateEntry, updateCol3, 
           <OrangeLabel text="COLUMN 4 — MY PART" />
           <FormField
             label="The Realization"
-            hint='"How have I done the things I\'ve resented in column 2 to this person and/or others?" Skip if col 1 is not a person.'
+            hint={`"How have I done the things I've resented in column 2 to this person and/or others?" Skip if col 1 is not a person.`}
             value={entry.col4.realization}
             onChangeText={(v) => updateCol4(entry.id, 'realization', v)}
             placeholder="What I've realized about myself in this situation…"
