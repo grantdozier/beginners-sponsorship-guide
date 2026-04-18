@@ -23,6 +23,8 @@ import SexInventoryScreen from './src/screens/SexInventoryScreen';
 import CharacterDefectsScreen from './src/screens/CharacterDefectsScreen';
 import TableOfContentsScreen from './src/screens/TableOfContentsScreen';
 import GenericStepScreen from './src/screens/GenericStepScreen';
+import OnboardingScreen from './src/screens/OnboardingScreen';
+import { AuthProvider, useAuth } from './src/api/AuthContext';
 
 const Stack = createNativeStackNavigator();
 
@@ -48,6 +50,30 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />
+      <AuthProvider>
+        <RootNavigator />
+      </AuthProvider>
+    </SafeAreaProvider>
+  );
+}
+
+function RootNavigator() {
+  const { user, loading, needsOnboarding } = useAuth();
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, backgroundColor: CREAM, justifyContent: 'center' }}>
+        <ActivityIndicator size="large" color={ORANGE} />
+      </View>
+    );
+  }
+
+  if (needsOnboarding || !user) {
+    return <OnboardingScreen />;
+  }
+
+  return (
+    <>
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={{
@@ -105,6 +131,6 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </SafeAreaProvider>
+    </>
   );
 }
