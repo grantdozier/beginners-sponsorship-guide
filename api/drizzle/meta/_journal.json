@@ -8,6 +8,13 @@
       "when": 1776551281788,
       "tag": "0000_illegal_kree",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1776551584853,
+      "tag": "0001_talented_gamora",
+      "breakpoints": true
     }
   ]
 }

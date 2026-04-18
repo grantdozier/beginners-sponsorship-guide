@@ -75,7 +75,7 @@ export const progressMarkers = pgTable(
     scopeKey: text('scope_key').notNull(),
     state: text('state', { enum: ['in_progress', 'shared', 'reviewed'] }).notNull(),
     note: text('note'),
-    markedByUserId: uuid('marked_by_user_id').notNull().references(() => users.id),
+    markedByUserId: uuid('marked_by_user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
     markedAt: timestamp('marked_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => ({
