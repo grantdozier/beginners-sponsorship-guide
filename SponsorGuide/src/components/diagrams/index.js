@@ -1,0 +1,9 @@
+export { default as ProblemDiagram } from './ProblemDiagram';
+export { default as SolutionDiagram } from './SolutionDiagram';
+export { default as StepOneDiagram } from './StepOneDiagram';
+export { default as StepTwoDiagram } from './StepTwoDiagram';
+export { default as StepThreeDiagram } from './StepThreeDiagram';
+export { default as StepFourObstaclesDiagram } from './StepFourObstaclesDiagram';
+export { default as BasicHumanSurvivalDiagram } from './BasicHumanSurvivalDiagram';
+export { default as SpiritualArchDiagram } from './SpiritualArchDiagram';
+export { default as StepTenDiagram } from './StepTenDiagram';
