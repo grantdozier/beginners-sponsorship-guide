@@ -31,6 +31,6 @@ app.onError((err, c) => {
 
 const port = Number(process.env.PORT ?? 8080);
 
-console.log(`sponsor-guide-api listening on :${port}`);
+console.log(`sponsor-guide-api listening on 0.0.0.0:${port}`);
 
-serve({ fetch: app.fetch, port });
+serve({ fetch: app.fetch, port, hostname: '0.0.0.0' });

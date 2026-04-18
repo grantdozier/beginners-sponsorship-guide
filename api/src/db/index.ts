@@ -9,9 +9,13 @@ if (!connectionString) {
   throw new Error('DATABASE_URL is not set');
 }
 
+// Railway's internal URL (postgres.railway.internal) is on a private network
+// and doesn't use SSL. Only enable SSL for public/external URLs.
+const isInternalRailway = connectionString.includes('.railway.internal');
+
 export const pool = new Pool({
   connectionString,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  ssl: isInternalRailway ? false : { rejectUnauthorized: false },
 });
 
 export const db = drizzle(pool, { schema });
