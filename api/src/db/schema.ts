@@ -8,7 +8,7 @@ import {
   unique,
   index,
 } from 'drizzle-orm/pg-core';
-import type { InventoryData } from '../../../shared/src/inventory';
+import type { InventoryData } from '../shared/inventory';
 
 export const users = pgTable(
   'users',
