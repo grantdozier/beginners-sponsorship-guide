@@ -48,19 +48,27 @@ export function newId() {
   return Crypto.randomUUID();
 }
 
+// Bobby's worksheet has three rows per area in Column 3, each paired with a
+// "fear of being…" parenthetical on the right.
+const emptyCol3Rows = () => [
+  { text: '', fear: '' },
+  { text: '', fear: '' },
+  { text: '', fear: '' },
+];
+
 export function emptyResentmentEntry() {
   return {
     id: newId(),
     col1_person: '',
     col2_cause: '',
     col3: {
-      self_esteem: { text: '', fear: '' },
-      pride: { text: '', fear: '' },
-      ambition: { text: '', fear: '' },
-      security: { text: '', fear: '' },
-      personal_relations: { text: '', fear: '' },
-      sex_relations: { text: '', fear: '' },
-      pocket_book: { text: '', fear: '' },
+      self_esteem: emptyCol3Rows(),
+      pride: emptyCol3Rows(),
+      ambition: emptyCol3Rows(),
+      security: emptyCol3Rows(),
+      personal_relations: emptyCol3Rows(),
+      sex_relations: emptyCol3Rows(),
+      pocket_book: emptyCol3Rows(),
     },
     col4: {
       realization: '',

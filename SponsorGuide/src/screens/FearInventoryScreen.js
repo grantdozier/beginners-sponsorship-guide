@@ -197,7 +197,7 @@ function FearChainCard({ chain, index, onUpdate, onAddStep, onRemoveStep, onDele
       {chain.chain.map((val, idx) => (
         <View key={idx} style={styles.chainRow}>
           <Text style={styles.chainStepLabel}>
-            {idx === 0 ? 'Fear' : `Because I fear being…`}
+            {idx === 0 ? 'Fear of being…' : 'Why do I have this fear?'}
           </Text>
           <View style={styles.chainInputWrap}>
             <TextInput

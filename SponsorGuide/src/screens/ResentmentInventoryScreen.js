@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  TextInput,
 } from 'react-native';
 import ScreenWrapper from '../components/ScreenWrapper';
 import { SectionHeader, Card, OrangeLabel, Divider } from '../components/SectionCard';
@@ -18,14 +19,51 @@ import {
   emptyResentmentEntry,
 } from '../storage/inventoryStore';
 
+// Area prompts copied verbatim from Bobby's worksheet (PDF 2.9, page 23).
 const AREAS = [
-  { key: 'self_esteem', label: 'Self Esteem', hint: 'How I see or feel about myself. Start sentences with "I am…"' },
-  { key: 'pride', label: 'Pride', hint: 'How others see me. "Others should…" / "No one should…"' },
-  { key: 'ambition', label: 'Ambition', hint: 'What I want to happen. "I want…"' },
-  { key: 'security', label: 'Security', hint: 'What I need to feel okay. "I need…to be okay."' },
-  { key: 'personal_relations', label: 'Personal Relations', hint: 'My beliefs about how relationships should look.' },
-  { key: 'sex_relations', label: 'Sex Relations', hint: 'My beliefs about how men/women should be.' },
-  { key: 'pocket_book', label: 'Pocket Book', hint: 'Affects my finances. "No one should…" / "Others can…"' },
+  {
+    key: 'self_esteem',
+    label: 'Self Esteem',
+    prompt: 'How I see or feel about myself. "The role I\'ve assigned myself."',
+    starters: 'Start sentences with — "I am…"',
+    example: 'Example: "I am the best husband she could have."',
+  },
+  {
+    key: 'pride',
+    label: 'Pride',
+    prompt: 'How I think others see me or feel about me. "The role I\'ve assigned others."',
+    starters: 'Start sentences with — "Others should…" or "No one should…" or "Others can…"',
+  },
+  {
+    key: 'ambition',
+    label: 'Ambition',
+    prompt: 'What I want to happen here.',
+    starters: 'Start sentences with — "I want…"',
+  },
+  {
+    key: 'security',
+    label: 'Security',
+    prompt: 'What I need here, to be okay.',
+    starters: 'Start sentences with — "I need…to be okay."',
+  },
+  {
+    key: 'personal_relations',
+    label: 'Personal Relations',
+    prompt: 'My deep-seated beliefs of how this relationship is supposed to look.',
+    starters: '"Wives trust their husbands." "Mothers respect their sons\' choices." "Real friends always agree with me."',
+  },
+  {
+    key: 'sex_relations',
+    label: 'Sex Relations',
+    prompt: 'My deep-seated beliefs of how real men and/or women are supposed to be.',
+    starters: 'Start sentences with — "A real man…" and/or "A real woman…"',
+  },
+  {
+    key: 'pocket_book',
+    label: 'Pocket Book',
+    prompt: 'Affects my finances.',
+    starters: 'Start sentences with — "No one (can, should, shouldn\'t)…" or "Others (can, should, shouldn\'t)…"',
+  },
 ];
 
 const tabs = [
@@ -67,14 +105,22 @@ export default function ResentmentInventoryScreen() {
     }));
   }, []);
 
-  const updateCol3 = useCallback((id, area, field, value) => {
+  const updateCol3 = useCallback((id, area, rowIdx, field, value) => {
     setData((prev) => ({
       ...prev,
-      resentments: prev.resentments.map((r) =>
-        r.id !== id
-          ? r
-          : { ...r, col3: { ...r.col3, [area]: { ...r.col3[area], [field]: value } } },
-      ),
+      resentments: prev.resentments.map((r) => {
+        if (r.id !== id) return r;
+        const rows = Array.isArray(r.col3[area])
+          ? r.col3[area]
+          : [{ text: '', fear: '' }, { text: '', fear: '' }, { text: '', fear: '' }];
+        return {
+          ...r,
+          col3: {
+            ...r.col3,
+            [area]: rows.map((row, i) => (i === rowIdx ? { ...row, [field]: value } : row)),
+          },
+        };
+      }),
     }));
   }, []);
 
@@ -214,6 +260,34 @@ function MyInventoryTab({
   );
 }
 
+function Col3Row({ index, row, onTextChange, onFearChange }) {
+  return (
+    <View style={styles.col3Row}>
+      <Text style={styles.col3RowNum}>{index + 1}.</Text>
+      <TextInput
+        style={styles.col3Input}
+        value={row.text}
+        onChangeText={onTextChange}
+        placeholder="Write your sentence here…"
+        placeholderTextColor={COLORS.mediumGray}
+        multiline
+        textAlignVertical="top"
+      />
+      <View style={styles.col3FearWrap}>
+        <Text style={styles.col3Paren}>(</Text>
+        <TextInput
+          style={styles.col3FearInput}
+          value={row.fear}
+          onChangeText={onFearChange}
+          placeholder="fear of…"
+          placeholderTextColor={COLORS.mediumGray}
+        />
+        <Text style={styles.col3Paren}>)</Text>
+      </View>
+    </View>
+  );
+}
+
 function EntryCard({ entry, index, expanded, onToggle, updateEntry, updateCol3, updateCol4, onDelete }) {
   const displayName = entry.col1_person || `Resentment #${index + 1}`;
   return (
@@ -257,29 +331,37 @@ function EntryCard({ entry, index, expanded, onToggle, updateEntry, updateCol3, 
 
           <OrangeLabel text="COLUMN 3 — AFFECTS MY" />
           <Text style={styles.hint}>
-            For each of the seven areas of self, write a sentence starting with the prompt.
-            In the "fear of being…" box, name the fear that lies underneath.
+            Keep Columns 1 & 2 in mind. Look at the 3rd Column and consider the opposite meaning
+            of each sentence to let the inventory reveal your fears behind each of the seven areas
+            of self (p.67 ¶3 "Notice the word 'fear' is bracketed alongside the difficulties").
           </Text>
-          {AREAS.map((area) => (
-            <View key={area.key} style={styles.areaBlock}>
-              <Text style={styles.areaLabel}>{area.label}</Text>
-              <Text style={styles.areaHint}>{area.hint}</Text>
-              <FormField
-                label="My belief"
-                value={entry.col3[area.key].text}
-                onChangeText={(v) => updateCol3(entry.id, area.key, 'text', v)}
-                placeholder="Write your sentence…"
-                minHeight={50}
-              />
-              <FormField
-                label="Fear of being…"
-                value={entry.col3[area.key].fear}
-                onChangeText={(v) => updateCol3(entry.id, area.key, 'fear', v)}
-                placeholder="The opposite of what you wrote above"
-                minHeight={44}
-              />
-            </View>
-          ))}
+          {AREAS.map((area) => {
+            const rows = Array.isArray(entry.col3[area.key])
+              ? entry.col3[area.key]
+              : [
+                  { text: entry.col3[area.key]?.text || '', fear: entry.col3[area.key]?.fear || '' },
+                  { text: '', fear: '' },
+                  { text: '', fear: '' },
+                ];
+            return (
+              <View key={area.key} style={styles.areaBlock}>
+                <Text style={styles.areaLabel}>{area.label}:</Text>
+                <Text style={styles.areaPrompt}>{area.prompt}</Text>
+                <Text style={styles.areaStarters}>{area.starters}</Text>
+                {area.example ? <Text style={styles.areaExample}>{area.example}</Text> : null}
+
+                {rows.map((row, idx) => (
+                  <Col3Row
+                    key={idx}
+                    index={idx}
+                    row={row}
+                    onTextChange={(v) => updateCol3(entry.id, area.key, idx, 'text', v)}
+                    onFearChange={(v) => updateCol3(entry.id, area.key, idx, 'fear', v)}
+                  />
+                ))}
+              </View>
+            );
+          })}
 
           <OrangeLabel text="COLUMN 4 — MY PART" />
           <FormField
@@ -516,22 +598,81 @@ const styles = StyleSheet.create({
   },
 
   areaBlock: {
-    marginBottom: 18,
+    marginBottom: 22,
     paddingBottom: 14,
     borderBottomWidth: 1,
     borderBottomColor: '#EEE2CD',
   },
   areaLabel: {
     fontFamily: 'PlayfairDisplay_700Bold',
-    fontSize: 15,
-    color: COLORS.inkDark,
-    marginBottom: 2,
+    fontSize: 16,
+    color: COLORS.orangeDark,
+    marginBottom: 4,
   },
-  areaHint: {
+  areaPrompt: {
+    fontFamily: 'PlayfairDisplay_400Regular',
+    fontSize: 13,
+    color: COLORS.inkDark,
+    lineHeight: 19,
+    marginBottom: 3,
+  },
+  areaStarters: {
     fontFamily: 'PlayfairDisplay_400Regular_Italic',
     fontSize: 12,
     color: COLORS.darkGray,
-    marginBottom: 8,
+    lineHeight: 18,
+    marginBottom: 3,
+  },
+  areaExample: {
+    fontFamily: 'PlayfairDisplay_400Regular_Italic',
+    fontSize: 12,
+    color: COLORS.darkGray,
+    marginBottom: 10,
+  },
+  col3Row: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginTop: 8,
+  },
+  col3RowNum: {
+    fontFamily: 'PlayfairDisplay_700Bold',
+    fontSize: 13,
+    color: COLORS.orangeDark,
+    width: 18,
+    paddingTop: 10,
+  },
+  col3Input: {
+    flex: 1,
+    fontFamily: 'PlayfairDisplay_400Regular',
+    fontSize: 14,
+    color: COLORS.inkDark,
+    backgroundColor: '#FFFBF3',
+    borderWidth: 1,
+    borderColor: '#EAD9BF',
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    minHeight: 40,
+    marginRight: 6,
+  },
+  col3FearWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    minWidth: 110,
+  },
+  col3Paren: {
+    fontFamily: 'PlayfairDisplay_400Regular',
+    fontSize: 18,
+    color: COLORS.orangeDark,
+  },
+  col3FearInput: {
+    flex: 1,
+    fontFamily: 'PlayfairDisplay_400Regular_Italic',
+    fontSize: 13,
+    color: COLORS.inkDark,
+    minWidth: 80,
+    paddingHorizontal: 2,
+    paddingVertical: 6,
   },
 
   addBtn: {
