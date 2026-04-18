@@ -12,6 +12,7 @@ import ScreenWrapper from '../components/ScreenWrapper';
 import { SectionHeader, Card, OrangeLabel, Divider } from '../components/SectionCard';
 import FormField from '../components/FormField';
 import SyncStatus from '../components/SyncStatus';
+import ShareBar from '../components/ShareBar';
 import { useInventorySync } from '../api/useInventorySync';
 import { fearInventory, COLORS } from '../data/content';
 import { emptyFearInventory, emptyFearChain } from '../storage/inventoryStore';
@@ -24,7 +25,7 @@ const tabs = [
 
 export default function FearInventoryScreen() {
   const [activeTab, setActiveTab] = useState('my');
-  const { data, setData, status } = useInventorySync('fear', emptyFearInventory);
+  const { data, setData, status, shared, sharedAt } = useInventorySync('fear', emptyFearInventory);
   const loading = data === null;
 
   const updateChainItem = useCallback((chainId, idx, value) => {
@@ -104,6 +105,7 @@ export default function FearInventoryScreen() {
 
       {activeTab === 'my' && (
         <>
+          <ShareBar type="fear" shared={shared} sharedAt={sharedAt} />
           <Card>
             <OrangeLabel text="YOUR FEAR CHAINS" />
             <Text style={styles.hint}>

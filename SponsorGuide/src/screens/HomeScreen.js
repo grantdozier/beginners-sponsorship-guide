@@ -4,6 +4,7 @@ import Svg, { Line } from 'react-native-svg';
 import ScreenWrapper from '../components/ScreenWrapper';
 import CoverHero from '../components/CoverHero';
 import NavCard from '../components/NavCard';
+import { usePairs } from '../api/usePairs';
 import { COLORS } from '../data/content';
 
 /** Decorative horizontal divider between section groups */
@@ -68,10 +69,36 @@ const groups = [
 
 export default function HomeScreen({ navigation }) {
   const { width } = Dimensions.get('window');
+  const { pairs } = usePairs();
 
   return (
     <ScreenWrapper>
       <CoverHero width={width} />
+
+      {pairs.length > 0 && (
+        <>
+          <SectionDivider label="Your Pairs" />
+          {pairs.map((pair) => (
+            <NavCard
+              key={pair.id}
+              number={pair.role === 'sponsor' ? 'Sponsee' : 'Sponsor'}
+              title={pair.partner.display_name}
+              subtitle={
+                pair.role === 'sponsor'
+                  ? 'View their shared inventories'
+                  : 'Your sponsor'
+              }
+              ornament="handshake"
+              onPress={() =>
+                navigation.navigate('PartnerDashboard', {
+                  pairId: pair.id,
+                  partner: pair.partner,
+                })
+              }
+            />
+          ))}
+        </>
+      )}
 
       {groups.map((group, gi) => (
         <View key={gi}>

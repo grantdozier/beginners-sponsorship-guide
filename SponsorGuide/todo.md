@@ -1,103 +1,124 @@
 # Sponsor Guide App — To Do
 
-## Before You Can Publish
+## Ship to App Store (in order)
 
-### Apple (iOS App Store)
+### 1. Before anything else
+- [ ] **Change your Expo password** — it was shared in chat earlier
+- [ ] **Change your Apple ID password** — same reason
+- [ ] **Rotate Railway Postgres password** — also shared earlier (Railway → Postgres → Variables → `PGPASSWORD` → Regenerate)
 
-- [ ] **Change your Expo and Apple passwords** — they were shared in plain text in chat
-- [ ] **Find your Apple Team ID**
-  - Go to developer.apple.com → Account → Membership Details
-  - Copy the Team ID (looks like: `A1B2C3D4E5`)
-  - Paste it into `credentials.local` under `APPLE_TEAM_ID`
-- [ ] **Apple Developer account** — $99/year subscription
-  - Already have an account at developer.apple.com
-  - Make sure your membership is active before submitting
+### 2. Host the privacy policy
+Apple requires a publicly-visible URL for your privacy policy.
 
-### Android (Google Play Store)
+**Easiest option — GitHub Pages (free):**
+- [ ] Go to `https://github.com/grantdozier/beginners-sponsorship-guide/settings/pages`
+- [ ] Source: Deploy from a branch → `main` → `/ (root)` → Save
+- [ ] Wait ~1 minute for the site to build
+- [ ] Your policy will be live at `https://grantdozier.github.io/beginners-sponsorship-guide/PRIVACY`
+- [ ] Verify the URL opens in a browser
 
-- [ ] **Register for Google Play Console** — one-time $25 fee
-  - Go to play.google.com/console
-  - Sign up with a Google account
-  - Pay the $25 registration fee
-  - Fill in `credentials.local` with your Google Play email
-- [ ] **Create a Google Service Account key** for automated submissions (EAS handles this — it will prompt you when the time comes)
+### 3. Apple Developer setup
+- [ ] **Apple Developer membership active** ($99/yr) → developer.apple.com/account
+- [ ] **Find your Team ID** (developer.apple.com → Account → Membership Details) — copy to `credentials.local`
+- [ ] **App Store Connect record:**
+  - Go to appstoreconnect.apple.com → Apps → `+`
+  - Platform: iOS
+  - Name: `Beginners Sponsorship Guide`
+  - Primary language: English (US)
+  - Bundle ID: `com.grantdozier.sponsorguide` (matches `app.json`)
+  - SKU: anything unique, e.g. `sponsor-guide-ios-1`
 
----
-
-## When You're Ready to Build & Submit
-
-### Step 1 — Set up EAS (Expo Application Services)
-
-Run this once inside the `SponsorGuide` folder:
+### 4. EAS login + project init (once)
+Run in a terminal inside `SponsorGuide/`:
 
 ```bash
 npx eas login
 ```
 
-Enter your Expo username and password from `credentials.local`.
-
-Then initialize EAS for the project:
+Enter your Expo credentials.
 
 ```bash
-npx eas build:configure
+npx eas init
 ```
 
-This creates an `eas.json` file in your project. Commit that file — it's not sensitive.
+This creates an EAS project and writes a project ID into `app.json`
+under `extra.eas.projectId`. Commit that change.
 
-### Step 2 — Build for iOS
-
+### 5. Build for iOS
 ```bash
-npx eas build --platform ios
+npx eas build --platform ios --profile production
 ```
 
-EAS will walk you through:
-- Connecting your Apple Developer account
-- Creating certificates and provisioning profiles automatically
-- Building on Expo's cloud servers (no Mac needed)
+EAS will ask to log into your Apple account and generate certificates
+automatically. Takes ~15-25 minutes. You get a `.ipa` download link when done.
 
-The build takes about 15–20 minutes. You'll get a download link when done.
-
-### Step 3 — Submit to App Store
-
+### 6. Upload to App Store Connect
 ```bash
 npx eas submit --platform ios
 ```
 
-This uploads your build to App Store Connect. You'll then go to appstoreconnect.apple.com to:
-- Add screenshots
-- Write the app description
-- Set the category (Health & Fitness or Books)
-- Submit for Apple review (takes 1–3 days)
+This uploads the `.ipa` to App Store Connect. Takes ~5 min.
 
-### Step 4 — Build for Android
+### 7. App Store Connect — finish the listing
+- [ ] **App Information** (left sidebar)
+  - Category: `Health & Fitness` (primary), `Reference` (secondary optional)
+  - Content rights: `Does your app contain, show, or access third-party content?` → No
+  - Age rating: Answer the questionnaire honestly (the inventory content is
+    "infrequent/mild" sexual content references since Step 4 sex inventory
+    discusses relationships)
+  - Privacy Policy URL: your GitHub Pages URL from step 2
+- [ ] **Pricing & Availability** → Free, All countries
+- [ ] **1.0 Prepare for Submission**
+  - Screenshots (required, see step 8 below)
+  - Description, keywords, support URL (your GitHub repo), promotional text
+  - App Review Information: your contact email + short note
+  - Version release: Automatically or Manually (your call)
 
-```bash
-npx eas build --platform android
-```
+### 8. Screenshots
+Apple requires screenshots at specific sizes. Easiest way:
+- Open the app in **Xcode iOS Simulator** (you have Android Studio but iOS needs Simulator — alternative is running in Expo Go on a physical iPhone and using AssistiveTouch screenshots)
+- Alternatively, use a screenshot generator like `fastlane snapshot` or just take screenshots on a physical device
 
-### Step 5 — Submit to Google Play
+Required sizes for iPhone:
+- 6.7" (iPhone 15 Pro Max / 14 Pro Max): 1290 × 2796 pixels
+- 6.5" (iPhone 11 Pro Max / XS Max): 1242 × 2688 or 1284 × 2778
+- 5.5" (iPhone 8 Plus): 1242 × 2208
 
-```bash
-npx eas submit --platform android
-```
+Minimum 3 screenshots per size. Suggestions:
+- Home / cover hero
+- A step screen with a diagram (e.g. The Problem triangle)
+- Resentment Inventory in edit mode
+- Pair screen with a generated code
+- Settings / your pairs list
+
+### 9. Submit for review
+Click **Submit for Review** in App Store Connect. Apple review typically
+takes 1–3 days. If rejected, the reason is specific; fix and resubmit.
+
+### 10. Google Play (parallel track)
+- [ ] **Register** at play.google.com/console ($25 one-time)
+- [ ] `npx eas build --platform android --profile production`
+- [ ] `npx eas submit --platform android` (you'll need to create the Play Console app record first)
+- [ ] Fill in listing: screenshots, short/long description, privacy policy URL, target age
 
 ---
 
-## App Development To Do
+## Known follow-ups (post-launch, not blockers)
 
-- [ ] Test the app on iOS with `npx expo start --tunnel` (fixes QR code issues on different networks)
-- [ ] Add the app icon (`assets/icon.png` — 1024x1024px)
-- [ ] Add the splash screen (`assets/splash.png`)
-- [ ] Update `app.json` with the app name, bundle ID, and version
-- [ ] Consider adding a `Step 12` screen (currently using generic screen)
-- [ ] Consider adding the QR code link to bbaworks.com as a tappable link in the Step 4 screen
+- Move the 98MB workshop audio to CDN (Cloudflare R2 / S3) and stream instead
+  of bundling
+- Add step-level progress badges on Home inventory cards
+- Add push notifications when sponsee shares (Phase 4.5 in PLAN.md)
+- "Delete my account" flow in Settings (API endpoint exists, UI not built yet)
+- Onboarding polish — maybe an intro screen explaining what the app does
 
 ---
 
-## Useful Links
+## Useful links
 
 - Expo dashboard: expo.dev
 - Apple developer portal: developer.apple.com
 - App Store Connect: appstoreconnect.apple.com
 - Google Play Console: play.google.com/console
 - EAS Build docs: docs.expo.dev/build/introduction
+- Railway dashboard: railway.com

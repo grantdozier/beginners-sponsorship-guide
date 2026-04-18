@@ -12,6 +12,7 @@ import ScreenWrapper from '../components/ScreenWrapper';
 import { SectionHeader, Card, OrangeLabel, Divider } from '../components/SectionCard';
 import FormField from '../components/FormField';
 import SyncStatus from '../components/SyncStatus';
+import ShareBar from '../components/ShareBar';
 import { useInventorySync } from '../api/useInventorySync';
 import { resentmentInventory, COLORS } from '../data/content';
 import {
@@ -75,7 +76,10 @@ const tabs = [
 export default function ResentmentInventoryScreen() {
   const [activeTab, setActiveTab] = useState('my');
   const [expandedId, setExpandedId] = useState(null);
-  const { data, setData, status } = useInventorySync('resentment', emptyResentmentInventory);
+  const { data, setData, status, shared, sharedAt, share } = useInventorySync(
+    'resentment',
+    emptyResentmentInventory,
+  );
   const loading = data === null;
 
   const updateEntry = useCallback((id, patch) => {
@@ -173,16 +177,19 @@ export default function ResentmentInventoryScreen() {
       </View>
 
       {activeTab === 'my' && (
-        <MyInventoryTab
-          entries={data.resentments}
-          expandedId={expandedId}
-          setExpandedId={setExpandedId}
-          updateEntry={updateEntry}
-          updateCol3={updateCol3}
-          updateCol4={updateCol4}
-          addEntry={addEntry}
-          deleteEntry={deleteEntry}
-        />
+        <>
+          <ShareBar type="resentment" shared={shared} sharedAt={sharedAt} />
+          <MyInventoryTab
+            entries={data.resentments}
+            expandedId={expandedId}
+            setExpandedId={setExpandedId}
+            updateEntry={updateEntry}
+            updateCol3={updateCol3}
+            updateCol4={updateCol4}
+            addEntry={addEntry}
+            deleteEntry={deleteEntry}
+          />
+        </>
       )}
 
       {activeTab === 'how' && <HowToTab />}

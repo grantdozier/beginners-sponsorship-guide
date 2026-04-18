@@ -12,6 +12,7 @@ import ScreenWrapper from '../components/ScreenWrapper';
 import { SectionHeader, Card, OrangeLabel, Divider } from '../components/SectionCard';
 import FormField from '../components/FormField';
 import SyncStatus from '../components/SyncStatus';
+import ShareBar from '../components/ShareBar';
 import { useInventorySync } from '../api/useInventorySync';
 import { sexConductInventory, COLORS } from '../data/content';
 import {
@@ -40,7 +41,10 @@ const tabs = [
 export default function SexInventoryScreen() {
   const [activeTab, setActiveTab] = useState('my');
   const [expandedId, setExpandedId] = useState(null);
-  const { data, setData, status } = useInventorySync('sex_conduct', emptySexConductInventory);
+  const { data, setData, status, shared, sharedAt } = useInventorySync(
+    'sex_conduct',
+    emptySexConductInventory,
+  );
   const loading = data === null;
 
   const updateRel = useCallback((id, patch) => {
@@ -156,6 +160,7 @@ export default function SexInventoryScreen() {
 
       {activeTab === 'my' && (
         <>
+          <ShareBar type="sex_conduct" shared={shared} sharedAt={sharedAt} />
           <Card>
             <OrangeLabel text="YOUR RELATIONSHIPS" />
             <Text style={styles.hint}>
