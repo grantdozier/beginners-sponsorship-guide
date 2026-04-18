@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -11,10 +11,10 @@ import {
 import ScreenWrapper from '../components/ScreenWrapper';
 import { SectionHeader, Card, OrangeLabel, Divider } from '../components/SectionCard';
 import FormField from '../components/FormField';
+import SyncStatus from '../components/SyncStatus';
+import { useInventorySync } from '../api/useInventorySync';
 import { resentmentInventory, COLORS } from '../data/content';
 import {
-  loadInventory,
-  saveInventory,
   emptyResentmentInventory,
   emptyResentmentEntry,
 } from '../storage/inventoryStore';
@@ -74,29 +74,9 @@ const tabs = [
 
 export default function ResentmentInventoryScreen() {
   const [activeTab, setActiveTab] = useState('my');
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState(null);
-  const saveTimer = useRef(null);
-
-  // Load from AsyncStorage on mount
-  useEffect(() => {
-    (async () => {
-      const stored = await loadInventory('resentment');
-      setData(stored || emptyResentmentInventory());
-      setLoading(false);
-    })();
-  }, []);
-
-  // Debounced auto-save: 600ms after the last change
-  useEffect(() => {
-    if (loading || !data) return;
-    if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => {
-      saveInventory('resentment', data).catch((e) => console.warn('save failed', e));
-    }, 600);
-    return () => saveTimer.current && clearTimeout(saveTimer.current);
-  }, [data, loading]);
+  const { data, setData, status } = useInventorySync('resentment', emptyResentmentInventory);
+  const loading = data === null;
 
   const updateEntry = useCallback((id, patch) => {
     setData((prev) => ({
@@ -174,6 +154,8 @@ export default function ResentmentInventoryScreen() {
         title="Resentment Inventory"
         subtitle='"God please help me see the truth about my resentments"'
       />
+
+      <SyncStatus status={status} />
 
       {/* Tabs */}
       <View style={styles.tabBar}>

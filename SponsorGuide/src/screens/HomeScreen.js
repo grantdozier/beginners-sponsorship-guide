@@ -61,6 +61,7 @@ const groups = [
     label: 'Reference',
     items: [
       { number: '✦', title: 'Table of Contents', subtitle: 'Full guide index', screen: 'TableOfContents', ornament: 'index' },
+      { number: '☼', title: 'Settings & Pairing', subtitle: 'Your name, sponsor/sponsee connections', screen: 'Settings', ornament: 'handshake' },
     ],
   },
 ];

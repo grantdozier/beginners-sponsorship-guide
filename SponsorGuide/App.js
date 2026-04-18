@@ -24,6 +24,7 @@ import CharacterDefectsScreen from './src/screens/CharacterDefectsScreen';
 import TableOfContentsScreen from './src/screens/TableOfContentsScreen';
 import GenericStepScreen from './src/screens/GenericStepScreen';
 import OnboardingScreen from './src/screens/OnboardingScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 import { AuthProvider, useAuth } from './src/api/AuthContext';
 
 const Stack = createNativeStackNavigator();
@@ -125,6 +126,7 @@ function RootNavigator() {
           />
           <Stack.Screen name="CharacterDefects" component={CharacterDefectsScreen} />
           <Stack.Screen name="TableOfContents" component={TableOfContentsScreen} />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
           <Stack.Screen
             name="Step"
             component={GenericStepScreen}

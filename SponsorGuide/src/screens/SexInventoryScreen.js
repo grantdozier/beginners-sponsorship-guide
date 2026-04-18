@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -11,10 +11,10 @@ import {
 import ScreenWrapper from '../components/ScreenWrapper';
 import { SectionHeader, Card, OrangeLabel, Divider } from '../components/SectionCard';
 import FormField from '../components/FormField';
+import SyncStatus from '../components/SyncStatus';
+import { useInventorySync } from '../api/useInventorySync';
 import { sexConductInventory, COLORS } from '../data/content';
 import {
-  loadInventory,
-  saveInventory,
   emptySexConductInventory,
   emptySexConductRelationship,
 } from '../storage/inventoryStore';
@@ -39,27 +39,9 @@ const tabs = [
 
 export default function SexInventoryScreen() {
   const [activeTab, setActiveTab] = useState('my');
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState(null);
-  const saveTimer = useRef(null);
-
-  useEffect(() => {
-    (async () => {
-      const stored = await loadInventory('sex_conduct');
-      setData(stored || emptySexConductInventory());
-      setLoading(false);
-    })();
-  }, []);
-
-  useEffect(() => {
-    if (loading || !data) return;
-    if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => {
-      saveInventory('sex_conduct', data).catch(() => {});
-    }, 600);
-    return () => saveTimer.current && clearTimeout(saveTimer.current);
-  }, [data, loading]);
+  const { data, setData, status } = useInventorySync('sex_conduct', emptySexConductInventory);
+  const loading = data === null;
 
   const updateRel = useCallback((id, patch) => {
     setData((prev) => ({
@@ -155,6 +137,8 @@ export default function SexInventoryScreen() {
         title="Sex Conduct Inventory"
         subtitle='"God please help me see the Truth about my conduct in relationships"'
       />
+
+      <SyncStatus status={status} />
 
       <View style={styles.tabBar}>
         {tabs.map((tab) => (

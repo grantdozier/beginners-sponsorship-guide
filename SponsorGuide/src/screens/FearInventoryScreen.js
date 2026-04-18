@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -11,13 +11,10 @@ import {
 import ScreenWrapper from '../components/ScreenWrapper';
 import { SectionHeader, Card, OrangeLabel, Divider } from '../components/SectionCard';
 import FormField from '../components/FormField';
+import SyncStatus from '../components/SyncStatus';
+import { useInventorySync } from '../api/useInventorySync';
 import { fearInventory, COLORS } from '../data/content';
-import {
-  loadInventory,
-  saveInventory,
-  emptyFearInventory,
-  emptyFearChain,
-} from '../storage/inventoryStore';
+import { emptyFearInventory, emptyFearChain } from '../storage/inventoryStore';
 
 const tabs = [
   { key: 'my', label: 'My Inventory' },
@@ -27,26 +24,8 @@ const tabs = [
 
 export default function FearInventoryScreen() {
   const [activeTab, setActiveTab] = useState('my');
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const saveTimer = useRef(null);
-
-  useEffect(() => {
-    (async () => {
-      const stored = await loadInventory('fear');
-      setData(stored || emptyFearInventory());
-      setLoading(false);
-    })();
-  }, []);
-
-  useEffect(() => {
-    if (loading || !data) return;
-    if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => {
-      saveInventory('fear', data).catch(() => {});
-    }, 600);
-    return () => saveTimer.current && clearTimeout(saveTimer.current);
-  }, [data, loading]);
+  const { data, setData, status } = useInventorySync('fear', emptyFearInventory);
+  const loading = data === null;
 
   const updateChainItem = useCallback((chainId, idx, value) => {
     setData((prev) => ({
@@ -106,6 +85,8 @@ export default function FearInventoryScreen() {
         title="Fear Inventory"
         subtitle='"God please help me see the truth about my fears"'
       />
+
+      <SyncStatus status={status} />
 
       <View style={styles.tabBar}>
         {tabs.map((tab) => (
