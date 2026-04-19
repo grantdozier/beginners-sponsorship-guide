@@ -12,7 +12,7 @@ A free mobile app that digitizes the paper *Beginners Sponsorship Guide* by Bobb
 
 ## Support
 
-Questions or data-deletion requests: [dev@tabxapp.com](mailto:dev@tabxapp.com).
+Questions or data-deletion requests: [operator@doziertechgroup.com](mailto:operator@doziertechgroup.com).
 
 ## About
 

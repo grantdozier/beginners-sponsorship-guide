@@ -3,131 +3,136 @@ import { View } from 'react-native';
 import Svg, { Circle, Polygon, Text as SvgText, G, Rect, Line, Defs, Marker, Path } from 'react-native-svg';
 import DiagramBanner from './DiagramBanner';
 
-export default function StepOneDiagram({ width = 360 }) {
-  const svgHeight = 520;
+export default function StepOneDiagram({ width = 380 }) {
+  const svgHeight = 560;
+  // Geometry: circle center (190,250), r=180
+  // Triangle inscribed: apex(190,85), bl(40,415), br(340,415)
+  // Left arrow angle ≈ 77°, right arrow angle ≈ 77°
+  const cxc = 190, cyc = 250, rad = 180;
+
   return (
     <View style={{ alignItems: 'center' }}>
       <DiagramBanner title="Step One" width={width * 0.75} height={58} id="step1-banner" />
-      <Svg width={width} height={svgHeight} viewBox="0 0 360 520">
+      <Svg width={width} height={svgHeight} viewBox="0 0 380 560">
         <Defs>
-          <Marker id="arrowBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-            <Path d="M0,0 L8,3 L0,6 Z" fill="#4A72B8" />
+          <Marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <Path d="M0,0 L10,3.5 L0,7 Z" fill="#4A72B8" />
           </Marker>
         </Defs>
 
         {/* Outer circle */}
-        <Circle cx="180" cy="240" r="175" stroke="#1A1A1A" strokeWidth="2" fill="none" />
+        <Circle cx={cxc} cy={cyc} r={rad} stroke="#1A1A1A" strokeWidth="2" fill="none" />
 
         {/* Yellow filled triangle — inscribed in circle */}
         <Polygon
-          points="180,80 28,400 332,400"
-          fill="#F5C93F"
+          points="190,85 40,415 340,415"
+          fill="#E8C94A"
           stroke="#1A1A1A"
-          strokeWidth="1"
+          strokeWidth="1.5"
         />
 
-        {/* BODY label (top-left, on circle edge) */}
-        <Rect x="68" y="82" width="72" height="28" rx="3" fill="white" stroke="#1A1A1A" strokeWidth="1" />
-        <SvgText x="104" y="102" textAnchor="middle" fontSize="16" fontWeight="700" fill="#1A1A1A">
+        {/* ═══ BODY box (top-left, straddling circle edge) ═══ */}
+        <Rect x="72" y="78" width="80" height="34" rx="3" fill="white" stroke="#1A1A1A" strokeWidth="1.5" />
+        <SvgText x="112" y="102" textAnchor="middle" fontSize="18" fontWeight="700" fill="#1A1A1A">
           BODY
         </SvgText>
 
-        {/* WILL label (top-right, on circle edge) */}
-        <Rect x="220" y="82" width="72" height="28" rx="3" fill="white" stroke="#1A1A1A" strokeWidth="1" />
-        <SvgText x="256" y="102" textAnchor="middle" fontSize="16" fontWeight="700" fill="#1A1A1A">
+        {/* ═══ WILL box (top-right, straddling circle edge) ═══ */}
+        <Rect x="228" y="78" width="80" height="34" rx="3" fill="white" stroke="#1A1A1A" strokeWidth="1.5" />
+        <SvgText x="268" y="102" textAnchor="middle" fontSize="18" fontWeight="700" fill="#1A1A1A">
           WILL
         </SvgText>
 
-        {/* Dashed arrow BODY → ABSTINENCE (down-left) */}
-        <Line x1="90" y1="120" x2="30" y2="420" stroke="#4A72B8" strokeWidth="1.5" strokeDasharray="5,4" markerEnd="url(#arrowBlue)" />
+        {/* ═══ Left dashed arrow: BODY → ABSTINENCE ═══ */}
+        <Line x1="95" y1="122" x2="32" y2="440" stroke="#4A72B8" strokeWidth="2.5" strokeDasharray="8,6" markerEnd="url(#arrowBlue)" />
 
-        {/* Text labels along BODY → ABSTINENCE */}
-        <SvgText x="100" y="160" fontSize="10" fill="#1A1A1A" transform="rotate(-75 100 160)">
+        {/* Labels along left arrow */}
+        <SvgText x="85" y="180" fontSize="11" fill="#1A1A1A" transform="rotate(-78 85 180)">
           Physical Defect = ALLERGY
         </SvgText>
-        <SvgText x="80" y="250" fontSize="10" fill="#1A1A1A" transform="rotate(-75 80 250)">
+        <SvgText x="68" y="280" fontSize="11" fill="#1A1A1A" transform="rotate(-78 68 280)">
           Phenomenon of Craving
         </SvgText>
-        <SvgText x="62" y="340" fontSize="10" fill="#1A1A1A" transform="rotate(-75 62 340)">
+        <SvgText x="52" y="375" fontSize="11" fill="#1A1A1A" transform="rotate(-78 52 375)">
           Compulsion
         </SvgText>
 
-        {/* ABSTINENCE box (bottom-left, outside circle) */}
-        <Rect x="0" y="425" width="100" height="28" rx="3" fill="white" stroke="#1A1A1A" strokeWidth="1" />
-        <SvgText x="50" y="444" textAnchor="middle" fontSize="12" fontWeight="700" fill="#1A1A1A">
+        {/* ═══ ABSTINENCE box (bottom-left, outside circle) ═══ */}
+        <Rect x="0" y="446" width="110" height="32" rx="3" fill="white" stroke="#1A1A1A" strokeWidth="1.5" />
+        <SvgText x="55" y="468" textAnchor="middle" fontSize="14" fontWeight="700" fill="#1A1A1A">
           ABSTINENCE
         </SvgText>
 
-        {/* Dashed arrow WILL → Right ACTION (down-right) */}
-        <Line x1="270" y1="120" x2="330" y2="390" stroke="#4A72B8" strokeWidth="1.5" strokeDasharray="5,4" markerEnd="url(#arrowBlue)" />
+        {/* ═══ Right dashed arrow: WILL → Right ACTION ═══ */}
+        <Line x1="285" y1="122" x2="348" y2="410" stroke="#4A72B8" strokeWidth="2.5" strokeDasharray="8,6" markerEnd="url(#arrowBlue)" />
 
-        {/* Text labels along WILL → Right ACTION */}
-        <SvgText x="258" y="150" fontSize="10" fill="#1A1A1A" transform="rotate(75 258 150)">
+        {/* Labels along right arrow — spaced evenly */}
+        <SvgText x="290" y="168" fontSize="10" fill="#1A1A1A" transform="rotate(78 290 168)">
           Spiritual Defect =
         </SvgText>
-        <SvgText x="264" y="170" fontSize="10" fill="#1A1A1A" transform="rotate(75 264 170)">
+        <SvgText x="296" y="192" fontSize="10" fill="#1A1A1A" transform="rotate(78 296 192)">
           UNMANAGEABILITY
         </SvgText>
-        <SvgText x="278" y="210" fontSize="10" fill="#1A1A1A" transform="rotate(75 278 210)">
+        <SvgText x="308" y="240" fontSize="10" fill="#1A1A1A" transform="rotate(78 308 240)">
           Selfishness
         </SvgText>
-        <SvgText x="284" y="235" fontSize="10" fill="#1A1A1A" transform="rotate(75 284 235)">
+        <SvgText x="314" y="268" fontSize="10" fill="#1A1A1A" transform="rotate(78 314 268)">
           Self-centeredness
         </SvgText>
-        <SvgText x="296" y="275" fontSize="10" fill="#1A1A1A" transform="rotate(75 296 275)">
+        <SvgText x="324" y="310" fontSize="10" fill="#1A1A1A" transform="rotate(78 324 310)">
           Spiritual Malady
         </SvgText>
-        <SvgText x="305" y="310" fontSize="10" fill="#1A1A1A" transform="rotate(75 305 310)">
+        <SvgText x="332" y="348" fontSize="10" fill="#1A1A1A" transform="rotate(78 332 348)">
           Transformation
         </SvgText>
-        <SvgText x="314" y="345" fontSize="10" fill="#1A1A1A" transform="rotate(75 314 345)">
+        <SvgText x="340" y="378" fontSize="10" fill="#1A1A1A" transform="rotate(78 340 378)">
           OTHER/other
         </SvgText>
-        <SvgText x="320" y="368" fontSize="10" fill="#1A1A1A" transform="rotate(75 320 368)">
+        <SvgText x="344" y="398" fontSize="10" fill="#1A1A1A" transform="rotate(78 344 398)">
           Centeredness
         </SvgText>
 
-        {/* Right ACTION box (right side) */}
-        <Rect x="310" y="392" width="48" height="40" rx="3" fill="white" stroke="#1A1A1A" strokeWidth="1" />
-        <SvgText x="334" y="407" textAnchor="middle" fontSize="11" fontWeight="700" fill="#1A1A1A">
+        {/* ═══ Right ACTION box (bottom-right) ═══ */}
+        <Rect x="316" y="414" width="62" height="44" rx="3" fill="white" stroke="#1A1A1A" strokeWidth="1.5" />
+        <SvgText x="347" y="433" textAnchor="middle" fontSize="13" fontWeight="700" fill="#1A1A1A">
           Right
         </SvgText>
-        <SvgText x="334" y="422" textAnchor="middle" fontSize="11" fontWeight="700" fill="#1A1A1A">
+        <SvgText x="347" y="450" textAnchor="middle" fontSize="13" fontWeight="700" fill="#1A1A1A">
           ACTION
         </SvgText>
 
-        {/* MIND box (bottom-left of circle) */}
-        <Rect x="60" y="435" width="62" height="28" rx="3" fill="white" stroke="#1A1A1A" strokeWidth="1" />
-        <SvgText x="91" y="454" textAnchor="middle" fontSize="14" fontWeight="700" fill="#1A1A1A">
+        {/* ═══ MIND box (bottom-left) ═══ */}
+        <Rect x="55" y="486" width="72" height="32" rx="3" fill="white" stroke="#1A1A1A" strokeWidth="1.5" />
+        <SvgText x="91" y="508" textAnchor="middle" fontSize="16" fontWeight="700" fill="#1A1A1A">
           MIND
         </SvgText>
 
-        {/* Horizontal dashed arrow MIND → Right THINKING */}
-        <Line x1="125" y1="449" x2="305" y2="449" stroke="#4A72B8" strokeWidth="1.5" strokeDasharray="5,4" markerEnd="url(#arrowBlue)" />
+        {/* ═══ Horizontal dashed arrow: MIND → Right THINKING ═══ */}
+        <Line x1="130" y1="502" x2="312" y2="502" stroke="#4A72B8" strokeWidth="2.5" strokeDasharray="8,6" markerEnd="url(#arrowBlue)" />
 
-        {/* Text labels along MIND → Right THINKING */}
-        <SvgText x="140" y="443" fontSize="9" fill="#1A1A1A">
-          Mental Defect=
+        {/* Labels above / below horizontal arrow */}
+        <SvgText x="145" y="495" fontSize="10" fill="#1A1A1A">
+          Mental Defect =
         </SvgText>
-        <SvgText x="140" y="468" fontSize="9" fill="#1A1A1A">
+        <SvgText x="145" y="520" fontSize="10" fill="#1A1A1A">
           OBSESSION
         </SvgText>
-        <SvgText x="210" y="443" fontSize="9" fill="#1A1A1A">
+        <SvgText x="222" y="495" fontSize="10" fill="#1A1A1A">
           Delusion
         </SvgText>
-        <SvgText x="253" y="443" fontSize="9" fill="#1A1A1A">
+        <SvgText x="268" y="495" fontSize="10" fill="#1A1A1A">
           Spiritual
         </SvgText>
-        <SvgText x="253" y="468" fontSize="9" fill="#1A1A1A">
+        <SvgText x="268" y="520" fontSize="10" fill="#1A1A1A">
           Awakening
         </SvgText>
 
-        {/* Right THINKING box (bottom-right) */}
-        <Rect x="310" y="435" width="48" height="40" rx="3" fill="white" stroke="#1A1A1A" strokeWidth="1" />
-        <SvgText x="334" y="451" textAnchor="middle" fontSize="11" fontWeight="700" fill="#1A1A1A">
+        {/* ═══ Right THINKING box (bottom-right) ═══ */}
+        <Rect x="316" y="484" width="62" height="44" rx="3" fill="white" stroke="#1A1A1A" strokeWidth="1.5" />
+        <SvgText x="347" y="504" textAnchor="middle" fontSize="13" fontWeight="700" fill="#1A1A1A">
           Right
         </SvgText>
-        <SvgText x="334" y="466" textAnchor="middle" fontSize="10" fontWeight="700" fill="#1A1A1A">
+        <SvgText x="347" y="521" textAnchor="middle" fontSize="11" fontWeight="700" fill="#1A1A1A">
           THINKING
         </SvgText>
       </Svg>

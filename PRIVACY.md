@@ -1,7 +1,7 @@
 # Privacy Policy — Beginners Sponsorship Guide
 
 **Effective date:** 2026-04-18
-**Contact:** dev@tabxapp.com
+**Contact:** operator@doziertechgroup.com
 
 This app ("Beginners Sponsorship Guide") is a free, community-service tool
 that digitizes the paper AA Beginners Sponsorship Guide by Bobby and allows a
@@ -101,4 +101,4 @@ change next time you open it.
 
 ## Contact
 
-For questions or data-deletion requests, email dev@tabxapp.com.
+For questions or data-deletion requests, email operator@doziertechgroup.com.
