@@ -16,6 +16,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.grantdozier.sponsorguide",
       "buildNumber": "1",
+      "appleTeamId": "67NB48YDBQ",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }

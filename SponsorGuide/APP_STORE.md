@@ -17,6 +17,8 @@ something external. Anything with `❌` is missing.
 | App name | Beginners Sponsorship Guide | ✅ |
 | Subtitle | Step 4 with your sponsor | ✅ |
 | Bundle identifier | `com.grantdozier.sponsorguide` | ✅ in `app.json` |
+| Apple Team ID | `67NB48YDBQ` | ✅ in `app.json` + `credentials.local` |
+| Apple Developer enrollment | Individual (Apple Developer Program) | ✅ |
 | Version | `1.0.0` | ✅ in `app.json` |
 | iOS build number | `1` | ✅ in `app.json` |
 | Android versionCode | `1` | ✅ in `app.json` |
@@ -75,7 +77,7 @@ Rationale:
 | Support URL | ✅ (GitHub Pages root) |
 | Marketing URL | ⬜ (optional, left blank) |
 | What's New (1.0) | ✅ filled |
-| Screenshots — 6.9" / 6.5" iPhone | ❌ **required before submit** |
+| Screenshots — 6.9" / 6.5" iPhone | ✅ 3 screenshots in `SponsorGuide/store-assets/screenshots/` (IMG_9415, 9416, 9417) |
 | App icon (1024×1024) | ✅ bundled in `assets/icon.png` |
 | App Review Notes + contact | ⬜ to fill at submit time |
 
@@ -124,16 +126,13 @@ Rationale:
 
 ## What's missing (blockers for submission)
 
-1. ❌ **Apple Team ID** — 10-char string from developer.apple.com → Account → Membership Details. Needed for EAS build signing.
-2. ❌ **Screenshots** — minimum 3 iPhone screenshots (6.9" recommended). Take via Expo Go on physical iPhone (side button + volume up).
-3. ❌ **EAS project initialization** — run `npx eas init` inside `SponsorGuide/`. Commits the generated `projectId`.
-4. ❌ **First iOS build** — `npx eas build --platform ios --profile preview` to get a TestFlight-installable `.ipa`.
-5. ⏳ **Content rights verification** — ethically and legally we should have:
-   - Written permission from Bobby (short email reply saved)
-   - Decision on bundled workshop audio:
-     - Get permission from bbaworks rightsholders, OR
-     - Remove audio before production build
-   - Big Book excerpts are short quotations, defensible as fair use
+1. ✅ **Apple Team ID** — `67NB48YDBQ`, enrolled as Individual
+2. ✅ **Screenshots** — 3 captured, in `SponsorGuide/store-assets/screenshots/`
+3. ✅ **Bobby's approval** — verbal approval obtained (recorded here as attestation)
+4. ❌ **EAS project initialization** — run `npx eas init` inside `SponsorGuide/`. Commits the generated `projectId`.
+5. ❌ **First iOS build** — `npx eas build --platform ios --profile preview` to get a TestFlight-installable `.ipa`.
+6. ⏳ **Workshop audio decision** — still bundled in the app. Either get permission from bbaworks rightsholders, or remove before production build. Not required for app functionality.
+7. ⏳ **Listing copy pasted into App Store Connect** — see section below
 
 ---
 
@@ -177,6 +176,95 @@ npx eas submit --platform ios    # uploads to App Store Connect
 - "Delete my account" flow in Settings UI
 - PDF export of inventory
 - Google Play parallel track (`--platform android`, $25 Play Console registration)
+
+---
+
+## Listing copy (paste-ready)
+
+### Name (max 30 chars)
+```
+Beginners Sponsorship Guide
+```
+
+### Subtitle (max 30 chars)
+```
+Step 4 with your sponsor
+```
+
+### Promotional Text (max 170 chars — can be changed later without review)
+```
+A digital companion for Bobby's Beginners Sponsorship Guide. Work Step 4 with your sponsor — writable inventories, share when you're ready, private by default.
+```
+
+### Description (max 4000 chars)
+```
+A free digital companion to the paper Beginners Sponsorship Guide by Bobby. Built for the AA community — for people who have completed the 12 steps and are now ready to sponsor others.
+
+THE GUIDE
+The full 60-page guide, digitized. Big Book passages for each step with tap-to-read excerpts. The Problem and Solution diagrams, Step One through Step Twelve illustrations, the Spiritual Arch, and the "Our Way of Life" diagram — all redrawn as crisp vector graphics.
+
+WRITABLE INVENTORIES
+The Resentment Inventory, Fear Inventory, and Sex Conduct Inventory are fully writable, laid out the way Bobby designed them:
+• Resentment Inventory — four columns, seven areas of self, three belief/fear pairs per area, and the full column four (Realization, Self-Seeking, Selfish, Dishonest, Afraid, Harm).
+• Fear Inventory — chain the fears underneath your fears until you reach the root.
+• Sex Conduct Inventory — relationship history plus the nine questions from the Big Book, page 69.
+• Future Sex Ideal — build your "God, in the future I would like to be…" list.
+
+SPONSOR + SPONSEE
+Link with your sponsor (or sponsee) using a simple 6-character code — no email, no passwords. When the sponsee is ready, they tap "Share" and the sponsor can read the inventory from their own phone. Mark resentments and relationships as "Reviewed together" so you always know where you left off between sessions.
+
+PRIVACY
+Your inventory content is private by default. It only becomes visible to a sponsor after you tap Share. No ads. No analytics. No email or phone number required. You can delete your account and all data from Settings at any time.
+
+ACKNOWLEDGMENT
+This app is not affiliated with, endorsed by, or sponsored by Alcoholics Anonymous World Services, Inc. The 12 Steps and the Big Book are the property of A.A.W.S.
+
+The Beginners Sponsorship Guide was written by Bobby as a service to the fellowship. This app is a community effort to make it more accessible. See ya in the trenches.
+```
+
+### Keywords (max 100 chars total, comma-separated, no spaces)
+```
+sponsorship,aa,sobriety,step 4,inventory,recovery,sponsor,sponsee,12 steps,big book,alcoholic
+```
+
+### Support URL
+```
+https://grantdozier.github.io/beginners-sponsorship-guide/
+```
+
+### Marketing URL (optional — leave blank)
+
+### What's New in This Version (release notes for 1.0)
+```
+Welcome to the first release. The complete Beginners Sponsorship Guide by Bobby, with writable Step 4 inventories and sponsor/sponsee sharing.
+```
+
+### Copyright
+```
+© 2026 Grant Dozier
+```
+
+### App Review Notes
+```
+This app is a free, community-service tool built for members of Alcoholics Anonymous. It digitizes a paper workbook by an AA member ("Bobby") for taking a sponsee through Step Four of the 12-step program.
+
+No sign-in is required. On first launch the user picks a display name; an anonymous device UUID is used as identity.
+
+Two users can optionally link via a 6-character code to share Step Four inventory content between sponsor and sponsee. Pairing, inventories, and progress markers live on our Railway-hosted backend (beginners-sponsorship-guide-production.up.railway.app) over HTTPS only.
+
+No ads, no third-party SDKs, no tracking.
+
+The original author of the paper Beginners Sponsorship Guide ("Bobby") has given verbal approval for this app as a free, non-commercial service to the fellowship.
+```
+
+### App Review Contact
+- **First name:** Grant
+- **Last name:** Dozier
+- **Phone:** _(your phone)_
+- **Email:** `operator@doziertechgroup.com`
+
+### Demo account
+Not required — no sign-in in the app.
 
 ---
 
