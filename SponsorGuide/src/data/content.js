@@ -346,7 +346,7 @@ The inventory has FOUR COLUMNS:
 3. What areas of self were affected
 4. My part — where I was to blame
 
-NOTE: Before beginning the 4th Step inventory, listen to the workshop recordings at bbaworks.com. Go to Audio → Workshop Audio → 2018 Workshops → "Tyla & Joe C Alcoholic/addict complete 6 month workshop — all 12 steps." Listen to all four Step 4 recordings.`,
+NOTE: Before beginning the 4th Step inventory, listen to the four workshop recordings included in this app. Study how each column works. Spend the most time on columns 3 & 4 — the 4th column is where God reveals our true motives.`,
   },
   {
     number: 5,

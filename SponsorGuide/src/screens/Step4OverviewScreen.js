@@ -47,12 +47,13 @@ export default function Step4OverviewScreen({ navigation }) {
 
       {/* Workshop audio recordings */}
       <Card>
-        <OrangeLabel text="WORKSHOP RECORDINGS — BBAWORKS.COM" />
+        <OrangeLabel text="WORKSHOP RECORDINGS" />
         <Text style={styles.paragraph}>
-          Before taking someone through Step 4, listen to these workshop recordings from{' '}
-          <Text style={styles.bold}>Tyla & Joe C</Text> (bbaworks.com — 2018 Workshops).
-          By listening to these recordings, referring to the explanations in this guide,
-          and taking sponsees through the process, your understanding and confidence will grow.
+          Before taking someone through Step 4, listen to these four workshop recordings.
+          Study how each column works. Spend the most time on columns 3 and 4 — the 4th
+          column is of absolute importance. By listening to these recordings, referring to
+          the explanations in this guide, and taking sponsees through the process, your
+          understanding and confidence will grow.
         </Text>
         <Divider />
         <WorkshopAudioPlayer />

@@ -5,23 +5,23 @@ import { COLORS } from '../data/content';
 
 const RECORDINGS = [
   {
-    title: '5/6/18 Step 4, first column',
-    subtitle: 'Tyla',
+    title: 'Step 4 — First Column',
+    subtitle: 'Listing resentments',
     file: require('../../assets/audio/STEP4_first_column_audio.m4a'),
   },
   {
-    title: '5/13/18 Step 4, second and third column',
-    subtitle: 'Tyla',
+    title: 'Step 4 — Second & Third Columns',
+    subtitle: 'The cause & areas of self',
     file: require('../../assets/audio/STEP4_second_and_third_column_audio.m4a'),
   },
   {
-    title: '5/20/28 Step 4, the realization',
-    subtitle: 'Tyla',
+    title: 'Step 4 — The Realization',
+    subtitle: 'Seeing the other person as spiritually sick',
     file: require('../../assets/audio/STEP4_the_realization.m4a'),
   },
   {
-    title: '5/27/18 Step 4, fourth column',
-    subtitle: 'Tyla',
+    title: 'Step 4 — Fourth Column',
+    subtitle: 'My part: self-seeking, selfish, dishonest, afraid',
     file: require('../../assets/audio/STEP4_fourth_column.m4a'),
   },
 ];
