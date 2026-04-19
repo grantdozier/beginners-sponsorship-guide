@@ -8,6 +8,7 @@ A free mobile app that digitizes the paper *Beginners Sponsorship Guide* by Bobb
 
 - 📱 **iOS / Android**: available on the App Store and Google Play (coming soon)
 - 📄 [**Privacy Policy**](PRIVACY.md)
+- 🔞 [**Age Suitability**](AGE_SUITABILITY.md) — why the app is rated 18+
 - 💻 Source: [github.com/grantdozier/beginners-sponsorship-guide](https://github.com/grantdozier/beginners-sponsorship-guide)
 
 ## Support
