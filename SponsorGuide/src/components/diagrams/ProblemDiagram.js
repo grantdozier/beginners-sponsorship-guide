@@ -41,13 +41,13 @@ export default function ProblemDiagram({ width = 340 }) {
 
         {/* Allergy / Craving — inside, along left edge */}
         <SvgText
-          x="128"
-          y="230"
+          x="138"
+          y="220"
           textAnchor="middle"
-          fontSize="13"
+          fontSize="12"
           fontWeight="600"
           fill="#1A1A1A"
-          transform="rotate(-66 128 230)"
+          transform="rotate(-66 138 220)"
         >
           Allergy / Craving
         </SvgText>
@@ -67,13 +67,13 @@ export default function ProblemDiagram({ width = 340 }) {
 
         {/* Unmanageability / Malady — inside, along right edge */}
         <SvgText
-          x="212"
-          y="230"
+          x="202"
+          y="220"
           textAnchor="middle"
-          fontSize="12"
+          fontSize="11"
           fontWeight="600"
           fill="#1A1A1A"
-          transform="rotate(66 212 230)"
+          transform="rotate(66 202 220)"
         >
           Unmanageability / Malady
         </SvgText>
