@@ -13,7 +13,7 @@
       "backgroundColor": "#FAF1DE"
     },
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.grantdozier.sponsorguide",
       "buildNumber": "3",
       "appleTeamId": "67NB48YDBQ",
