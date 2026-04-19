@@ -1,10 +1,17 @@
 // Generates the iOS/Android app icon, adaptive icon, splash, and favicon
-// from a single SVG source. Run with: `node scripts/generate-icons.mjs`.
+// from a single PNG source (the tree-of-life concept). Run with:
+// `node scripts/generate-icons.mjs`.
+//
+// Source image: assets/app_icon_concept_1_colors.png (756x615 on a cream bg).
+// We pad it to 1024x1024 by extending the cream background on all sides.
 import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
 
 const ASSETS = path.resolve('assets');
+const SOURCE = path.join(ASSETS, 'app_icon_concept_1_colors.png');
+const CREAM = { r: 0xFA, g: 0xF1, b: 0xDE };   // #FAF1DE — matches theme
+const ORANGE = { r: 0xE8, g: 0x75, b: 0x1F };   // #E8751F
 
 // ──────────────────────────────────────────────────────────────
 // Main icon — 1024×1024, full-bleed orange gradient + serif "B"
@@ -126,15 +133,54 @@ async function renderSvg(svg, outPath, size, opts = {}) {
   console.log(`  ✓ ${path.basename(outPath)} — ${size}×${size}, ${kb}KB`);
 }
 
-console.log('Generating app icons from SVG...\n');
+console.log('Generating app icons from tree-of-life source PNG...\n');
 
-// iOS main icon — no alpha channel (Apple requirement)
-await renderSvg(ICON_SVG, path.join(ASSETS, 'icon.png'), 1024, { flatten: '#E8751F' });
-// Adaptive icon foreground — needs transparency (Android composites it)
-await renderSvg(ADAPTIVE_SVG, path.join(ASSETS, 'adaptive-icon.png'), 1024);
-// Splash — flatten onto cream
-await renderSvg(SPLASH_SVG, path.join(ASSETS, 'splash-icon.png'), 1024, { flatten: '#FAF1DE' });
-// Favicon — flatten onto orange
-await renderSvg(FAVICON_SVG, path.join(ASSETS, 'favicon.png'), 48, { flatten: '#E8751F' });
+// ──────────────────────────────────────────────────────────────
+// Pad the source image to square 1024×1024 on a cream background,
+// then emit the different asset variants.
+// ──────────────────────────────────────────────────────────────
+
+async function squarePad(size, bg) {
+  const meta = await sharp(SOURCE).metadata();
+  const maxSide = Math.max(meta.width, meta.height);
+  // Contain the art in ~85% of the square; 15% breathing room around it.
+  const artSize = Math.floor(size * 0.85);
+  const scale = artSize / maxSide;
+  const targetW = Math.floor(meta.width * scale);
+  const targetH = Math.floor(meta.height * scale);
+  const padX = Math.floor((size - targetW) / 2);
+  const padY = Math.floor((size - targetH) / 2);
+
+  const resized = await sharp(SOURCE)
+    .resize(targetW, targetH)
+    .toBuffer();
+
+  return sharp({
+    create: {
+      width: size,
+      height: size,
+      channels: 3,
+      background: bg,
+    },
+  })
+    .composite([{ input: resized, left: padX, top: padY }])
+    .png({ compressionLevel: 9 });
+}
+
+async function emit(outPath, size, bg) {
+  const pipeline = await squarePad(size, bg);
+  await pipeline.toFile(outPath);
+  const kb = (fs.statSync(outPath).size / 1024).toFixed(0);
+  console.log(`  ✓ ${path.basename(outPath)} — ${size}×${size}, ${kb}KB`);
+}
+
+// iOS icon — 1024×1024, cream background (no alpha)
+await emit(path.join(ASSETS, 'icon.png'), 1024, CREAM);
+// Android adaptive foreground — same source; Android wraps in shape
+await emit(path.join(ASSETS, 'adaptive-icon.png'), 1024, CREAM);
+// Splash screen — centered tree on cream
+await emit(path.join(ASSETS, 'splash-icon.png'), 1024, CREAM);
+// Favicon — tiny, orange bg
+await emit(path.join(ASSETS, 'favicon.png'), 48, ORANGE);
 
 console.log('\nDone. Review in assets/ then commit + rebuild.');
