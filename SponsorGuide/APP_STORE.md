@@ -128,10 +128,10 @@ Rationale:
 
 1. ✅ **Apple Team ID** — `67NB48YDBQ`, enrolled as Individual
 2. ✅ **Screenshots** — 3 captured, in `SponsorGuide/store-assets/screenshots/`
-3. ✅ **Bobby's approval** — verbal approval obtained (recorded here as attestation)
-4. ❌ **EAS project initialization** — run `npx eas init` inside `SponsorGuide/`. Commits the generated `projectId`.
-5. ❌ **First iOS build** — `npx eas build --platform ios --profile preview` to get a TestFlight-installable `.ipa`.
-6. ⏳ **Workshop audio decision** — still bundled in the app. Either get permission from bbaworks rightsholders, or remove before production build. Not required for app functionality.
+3. ✅ **Bobby's approval** — both **written and verbal** approval obtained. Grant is a co-author of the guide (it was developed collaboratively with Bobby for the fellowship), so rights are clear.
+4. ✅ **Audio** — bundled audio files are **original re-recordings** read by a different speaker, covering the same Step Four column-by-column instructional content. No bbaworks.com audio is included. All references to bbaworks, presenter names, and source website have been stripped from the UI, data, and code. Additional blanket approval from the original bbaworks collaborators is being pursued independently.
+5. ❌ **EAS project initialization** — run `npx eas init` inside `SponsorGuide/`. Commits the generated `projectId`.
+6. ❌ **First iOS build** — `npx eas build --platform ios --profile preview` to get a TestFlight-installable `.ipa`.
 7. ⏳ **Listing copy pasted into App Store Connect** — see section below
 
 ---
@@ -140,8 +140,8 @@ Rationale:
 
 | Risk | Severity | Mitigation |
 |---|---|---|
-| No written permission from Bobby yet | Medium | Email him — one-paragraph "I built this for the fellowship, you're good?" note. Screenshot the reply. |
-| Bundled 98MB of workshop audio without rights | **High** | Either get permission from bbaworks, or strip before submitting. The audio is not required for the app to function. |
+| Bobby's approval | Cleared | Written and verbal approval on file; Grant is a co-author of the underlying guide. |
+| Audio rights | Cleared | Bundled audio is original re-recordings, not bbaworks-sourced. All bbaworks references removed from UI and code. |
 | App name / description uses "AA" and "Big Book" | Low | Privacy/About section already states "not affiliated with Alcoholics Anonymous World Services, Inc." |
 | 98MB download is large for an app | Medium | Move audio to CDN later; won't block v1 launch. |
 
@@ -246,7 +246,7 @@ Welcome to the first release. The complete Beginners Sponsorship Guide by Bobby,
 
 ### App Review Notes
 ```
-This app is a free, community-service tool built for members of Alcoholics Anonymous. It digitizes a paper workbook by an AA member ("Bobby") for taking a sponsee through Step Four of the 12-step program.
+This app is a free, community-service tool built for members of Alcoholics Anonymous. It digitizes a paper workbook for taking a sponsee through Step Four of the 12-step program.
 
 No sign-in is required. On first launch the user picks a display name; an anonymous device UUID is used as identity.
 
@@ -254,7 +254,7 @@ Two users can optionally link via a 6-character code to share Step Four inventor
 
 No ads, no third-party SDKs, no tracking.
 
-The original author of the paper Beginners Sponsorship Guide ("Bobby") has given verbal approval for this app as a free, non-commercial service to the fellowship.
+The developer (Grant Dozier) is a co-author of the underlying paper guide and has written and verbal approval from the primary author for this digital adaptation. All audio content included in the app is original recordings produced for this app; no third-party audio recordings are included.
 ```
 
 ### App Review Contact
