@@ -20,13 +20,13 @@ import { COLORS } from '../data/content';
 export default function ShareBar({ type, shared, sharedAt, onShared }) {
   const { pairs, loading } = usePairs();
   const navigation = useNavigation();
-  const [sharing, setSharing] = useState(false);
+  const [busy, setBusy] = useState(false);
 
   // We share WITH a sponsor — so only pairs where MY role is 'sponsee' are relevant.
   const sponsors = pairs.filter((p) => p.role === 'sponsee');
 
   const doShare = async () => {
-    setSharing(true);
+    setBusy(true);
     try {
       const result = await api.shareInventory(type);
       onShared?.(result);
@@ -37,8 +37,33 @@ export default function ShareBar({ type, shared, sharedAt, onShared }) {
     } catch (err) {
       Alert.alert('Could not share', err.message);
     } finally {
-      setSharing(false);
+      setBusy(false);
     }
+  };
+
+  const doUnshare = () => {
+    Alert.alert(
+      'Unshare this inventory?',
+      `Your sponsor will immediately lose access. Your own copy stays on your phone untouched. You can re-share any time.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Unshare',
+          style: 'destructive',
+          onPress: async () => {
+            setBusy(true);
+            try {
+              const result = await api.unshareInventory(type);
+              onShared?.(result);
+            } catch (err) {
+              Alert.alert('Could not unshare', err.message);
+            } finally {
+              setBusy(false);
+            }
+          },
+        },
+      ],
+    );
   };
 
   if (loading) {
@@ -90,19 +115,40 @@ export default function ShareBar({ type, shared, sharedAt, onShared }) {
           </>
         )}
       </View>
-      <TouchableOpacity
-        style={shared ? styles.reshareBtn : styles.shareBtn}
-        onPress={doShare}
-        disabled={sharing}
-      >
-        {sharing ? (
-          <ActivityIndicator color={shared ? COLORS.orangeDark : COLORS.white} />
-        ) : (
-          <Text style={shared ? styles.reshareBtnText : styles.shareBtnText}>
-            {shared ? 'Re-share' : 'Share'}
-          </Text>
-        )}
-      </TouchableOpacity>
+      {shared ? (
+        <View style={styles.btnGroup}>
+          <TouchableOpacity
+            style={styles.reshareBtn}
+            onPress={doShare}
+            disabled={busy}
+          >
+            {busy ? (
+              <ActivityIndicator color={COLORS.orangeDark} />
+            ) : (
+              <Text style={styles.reshareBtnText}>Re-share</Text>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.unshareBtn}
+            onPress={doUnshare}
+            disabled={busy}
+          >
+            <Text style={styles.unshareBtnText}>Unshare</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <TouchableOpacity
+          style={styles.shareBtn}
+          onPress={doShare}
+          disabled={busy}
+        >
+          {busy ? (
+            <ActivityIndicator color={COLORS.white} />
+          ) : (
+            <Text style={styles.shareBtnText}>Share</Text>
+          )}
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -212,8 +258,8 @@ const styles = StyleSheet.create({
   },
   reshareBtn: {
     backgroundColor: 'transparent',
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     borderRadius: 8,
     borderWidth: 1.5,
     borderColor: '#5A7E4C',
@@ -221,6 +267,20 @@ const styles = StyleSheet.create({
   reshareBtnText: {
     fontFamily: 'PlayfairDisplay_700Bold',
     color: '#3D6B2E',
-    fontSize: 14,
+    fontSize: 13,
+  },
+  btnGroup: {
+    alignItems: 'flex-end',
+  },
+  unshareBtn: {
+    marginTop: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  unshareBtnText: {
+    fontFamily: 'PlayfairDisplay_400Regular_Italic',
+    color: '#8A5A5A',
+    fontSize: 12,
+    textDecorationLine: 'underline',
   },
 });

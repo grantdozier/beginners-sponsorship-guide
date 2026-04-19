@@ -92,6 +92,32 @@ app.post('/:type/share', requireDeviceUser, async (c) => {
   return c.json(toDto(updated));
 });
 
+/** DELETE /inventories/:type/share — revoke sharing, keep inventory */
+app.delete('/:type/share', requireDeviceUser, async (c) => {
+  const user = c.get('user');
+  const typeResult = typeSchema.safeParse(c.req.param('type'));
+  if (!typeResult.success) {
+    return c.json({ error: 'invalid_type', message: 'Unknown inventory type' }, 400);
+  }
+  const type = typeResult.data;
+
+  const [inv] = await db
+    .select()
+    .from(inventories)
+    .where(and(eq(inventories.ownerId, user.id), eq(inventories.type, type)))
+    .limit(1);
+
+  if (!inv) return c.json({ error: 'not_found', message: 'No inventory found' }, 404);
+
+  const [updated] = await db
+    .update(inventories)
+    .set({ isShared: false, sharedAt: null })
+    .where(eq(inventories.id, inv.id))
+    .returning();
+
+  return c.json(toDto(updated));
+});
+
 /** DELETE /inventories/:type — delete my own inventory */
 app.delete('/:type', requireDeviceUser, async (c) => {
   const user = c.get('user');

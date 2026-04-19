@@ -56,6 +56,7 @@ export const api = {
   listInventories: () => request('/inventories'),
   upsertInventory: (type, data) => request(`/inventories/${type}`, { method: 'PUT', body: { data } }),
   shareInventory: (type) => request(`/inventories/${type}/share`, { method: 'POST' }),
+  unshareInventory: (type) => request(`/inventories/${type}/share`, { method: 'DELETE' }),
   deleteInventory: (type) => request(`/inventories/${type}`, { method: 'DELETE' }),
 
   // Partner inventories

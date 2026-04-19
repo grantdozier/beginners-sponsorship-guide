@@ -9,15 +9,17 @@ import {
   Alert,
   Share,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import ScreenWrapper from '../components/ScreenWrapper';
 import { SectionHeader, Card, OrangeLabel, Divider } from '../components/SectionCard';
 import { useAuth } from '../api/AuthContext';
 import { usePairs } from '../api/usePairs';
 import { api, ApiError } from '../api/client';
+import { deleteInventory as deleteLocalInventory } from '../storage/inventoryStore';
 import { COLORS } from '../data/content';
 
 export default function SettingsScreen({ navigation }) {
-  const { user, updateName } = useAuth();
+  const { user, updateName, refresh: refreshAuth } = useAuth();
   const { pairs, refresh } = usePairs();
 
   return (
@@ -27,6 +29,7 @@ export default function SettingsScreen({ navigation }) {
       <ProfileSection user={user} updateName={updateName} />
       <PairsSection pairs={pairs} refresh={refresh} navigation={navigation} />
       <LinkActions refresh={refresh} />
+      <DataSection navigation={navigation} refreshAuth={refreshAuth} />
     </ScreenWrapper>
   );
 }
@@ -383,6 +386,139 @@ function RedeemCodeCard({ onDone, onCancel }) {
 }
 
 // =============================================================
+// Data & Privacy — delete inventories, delete account
+// =============================================================
+
+const INVENTORY_TYPES = [
+  { key: 'resentment', label: 'Resentment Inventory' },
+  { key: 'fear', label: 'Fear Inventory' },
+  { key: 'sex_conduct', label: 'Sex Conduct Inventory' },
+];
+
+function DataSection({ navigation, refreshAuth }) {
+  const [busy, setBusy] = useState(null); // null | inventory type | 'account'
+
+  const deleteOne = (type, label) => {
+    Alert.alert(
+      `Delete your ${label}?`,
+      'This removes every entry in this inventory from your phone and from our servers. If you shared it with a sponsor, they lose access too. This cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            setBusy(type);
+            try {
+              // Best-effort: server first, then local. If offline, still clear local.
+              try {
+                await api.deleteInventory(type);
+              } catch (e) {
+                // offline or 404 — still wipe local so it feels consistent
+              }
+              await deleteLocalInventory(type);
+              Alert.alert('Deleted', `Your ${label} has been removed.`);
+            } catch (err) {
+              Alert.alert('Could not delete', err.message);
+            } finally {
+              setBusy(null);
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  const deleteAccount = () => {
+    Alert.alert(
+      'Delete your account?',
+      "This permanently removes:\n\n• Your display name\n• All three of your inventories (local and on our servers)\n• Your connections to any sponsor or sponsee\n• All progress you've marked together\n\nAnyone currently paired with you will lose access immediately. This cannot be undone.",
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete everything',
+          style: 'destructive',
+          onPress: () => {
+            // Second confirmation — Apple guidance for destructive account actions.
+            Alert.alert(
+              'Are you absolutely sure?',
+              'Last chance to back out.',
+              [
+                { text: 'Never mind', style: 'cancel' },
+                {
+                  text: 'Yes, delete my account',
+                  style: 'destructive',
+                  onPress: async () => {
+                    setBusy('account');
+                    try {
+                      await api.deleteMe();
+                    } catch (e) {
+                      // If offline or already deleted, keep going with local wipe
+                    }
+                    // Scorched-earth local wipe
+                    try {
+                      await AsyncStorage.clear();
+                    } catch (e) {}
+                    // Bounce back through AuthContext → onboarding screen
+                    await refreshAuth();
+                    Alert.alert(
+                      'Account deleted',
+                      'All your data has been removed. You can start over any time.',
+                    );
+                  },
+                },
+              ],
+            );
+          },
+        },
+      ],
+    );
+  };
+
+  return (
+    <Card>
+      <OrangeLabel text="YOUR DATA" />
+      <Text style={styles.hint}>
+        Delete any inventory or your entire account. Deletion is immediate
+        and cannot be undone.
+      </Text>
+
+      {INVENTORY_TYPES.map((inv) => (
+        <TouchableOpacity
+          key={inv.key}
+          style={styles.dangerRow}
+          onPress={() => deleteOne(inv.key, inv.label)}
+          disabled={busy === inv.key}
+        >
+          <Text style={styles.dangerRowText}>
+            Delete my {inv.label}
+          </Text>
+          {busy === inv.key ? (
+            <ActivityIndicator size="small" color="#B44848" />
+          ) : (
+            <Text style={styles.dangerRowArrow}>›</Text>
+          )}
+        </TouchableOpacity>
+      ))}
+
+      <Divider />
+
+      <TouchableOpacity
+        style={[styles.btn, styles.btnDanger]}
+        onPress={deleteAccount}
+        disabled={busy === 'account'}
+      >
+        {busy === 'account' ? (
+          <ActivityIndicator color="#FFFFFF" />
+        ) : (
+          <Text style={styles.btnDangerText}>Delete my account</Text>
+        )}
+      </TouchableOpacity>
+    </Card>
+  );
+}
+
+// =============================================================
 // Styles
 // =============================================================
 
@@ -529,5 +665,34 @@ const styles = StyleSheet.create({
     color: '#B44848',
     marginBottom: 10,
     textAlign: 'center',
+  },
+
+  dangerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#EEE2CD',
+  },
+  dangerRowText: {
+    flex: 1,
+    fontFamily: 'PlayfairDisplay_400Regular',
+    fontSize: 14,
+    color: '#B44848',
+  },
+  dangerRowArrow: {
+    fontSize: 22,
+    color: '#B44848',
+    marginLeft: 8,
+  },
+  btnDanger: {
+    backgroundColor: '#B44848',
+    marginTop: 4,
+  },
+  btnDangerText: {
+    fontFamily: 'PlayfairDisplay_700Bold',
+    color: '#FFFFFF',
+    fontSize: 15,
+    letterSpacing: 0.3,
   },
 });
