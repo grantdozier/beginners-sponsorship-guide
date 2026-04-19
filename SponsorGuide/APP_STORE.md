@@ -168,13 +168,26 @@ npx eas submit --platform ios    # uploads to App Store Connect
 
 ---
 
-## After v1 ships (not blockers)
+## After v1 ships — v1.1 feature list
 
-- Move audio files off the bundle, serve from CDN or backend
-- Push notifications when sponsee shares new inventory
+Core data-safety features (should land in v1.1 soon after launch):
+- **Delete a single inventory** (UI button → `DELETE /inventories/:type`). API
+  exists; Settings or inventory-screen menu is the UI gap.
+- **Un-share an inventory** (flip `is_shared` back to false). API exists only
+  as `POST /share`; need a new `DELETE /share` endpoint + button.
+- **Delete my account + all my data** (UI button → `DELETE /users/me`,
+  cascades everything). Required by App Store for any app storing UGC.
+- **Disconnect / unpair from a sponsor** — already in Settings today, but
+  add a confirmation dialog that explains what the partner loses access to.
+
+Content expansion:
+- Re-enable workshop audio (see `docs/RESTORE_AUDIO.md`)
+- PDF export of a completed inventory
+- Push notifications when a sponsee shares fresh content
+
+Operational:
+- Move audio files off the bundle, serve from CDN
 - Step-level progress badges on home inventory cards
-- "Delete my account" flow in Settings UI
-- PDF export of inventory
 - Google Play parallel track (`--platform android`, $25 Play Console registration)
 
 ---
