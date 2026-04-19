@@ -40,6 +40,7 @@
 
 # Large media — hosted elsewhere in production (Cloudflare R2 / S3 / etc.)
 BBA_AUDIO/
+SponsorGuide/.audio-staging/
 
 # TypeScript build info
 **/*.tsbuildinfo

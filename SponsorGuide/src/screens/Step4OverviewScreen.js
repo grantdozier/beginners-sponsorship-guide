@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-nati
 import ScreenWrapper from '../components/ScreenWrapper';
 import { SectionHeader, Card, OrangeLabel, Divider } from '../components/SectionCard';
 import { StepFourObstaclesDiagram, BasicHumanSurvivalDiagram } from '../components/diagrams';
-import WorkshopAudioPlayer from '../components/WorkshopAudioPlayer';
+// import WorkshopAudioPlayer from '../components/WorkshopAudioPlayer'; // disabled for v1
 import { COLORS } from '../data/content';
 
 export default function Step4OverviewScreen({ navigation }) {
@@ -45,19 +45,19 @@ export default function Step4OverviewScreen({ navigation }) {
         </View>
       </Card>
 
-      {/* Workshop audio recordings */}
+      {/* Workshop audio recordings — disabled for v1, re-enable for v1.1 */}
+      {/*
       <Card>
         <OrangeLabel text="WORKSHOP RECORDINGS" />
         <Text style={styles.paragraph}>
           Before taking someone through Step 4, listen to these four workshop recordings.
           Study how each column works. Spend the most time on columns 3 and 4 — the 4th
-          column is of absolute importance. By listening to these recordings, referring to
-          the explanations in this guide, and taking sponsees through the process, your
-          understanding and confidence will grow.
+          column is of absolute importance.
         </Text>
         <Divider />
         <WorkshopAudioPlayer />
       </Card>
+      */}
 
       {/* Navigation to inventories */}
       <Card>

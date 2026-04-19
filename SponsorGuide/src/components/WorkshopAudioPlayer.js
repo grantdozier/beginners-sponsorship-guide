@@ -3,28 +3,12 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { COLORS } from '../data/content';
 
-const RECORDINGS = [
-  {
-    title: 'Step 4 — First Column',
-    subtitle: 'Listing resentments',
-    file: require('../../assets/audio/STEP4_first_column_audio.m4a'),
-  },
-  {
-    title: 'Step 4 — Second & Third Columns',
-    subtitle: 'The cause & areas of self',
-    file: require('../../assets/audio/STEP4_second_and_third_column_audio.m4a'),
-  },
-  {
-    title: 'Step 4 — The Realization',
-    subtitle: 'Seeing the other person as spiritually sick',
-    file: require('../../assets/audio/STEP4_the_realization.m4a'),
-  },
-  {
-    title: 'Step 4 — Fourth Column',
-    subtitle: 'My part: self-seeking, selfish, dishonest, afraid',
-    file: require('../../assets/audio/STEP4_fourth_column.m4a'),
-  },
-];
+// Audio files are intentionally not bundled in v1. They live in
+// `SponsorGuide/.audio-staging/` in the repo. To re-enable for v1.1:
+//   1. Move .m4a files back into SponsorGuide/assets/audio/
+//   2. Restore the require() calls below
+//   3. Un-comment the Workshop card in Step4OverviewScreen.js
+const RECORDINGS = [];
 
 function formatTime(seconds) {
   if (!seconds || seconds < 0) return '0:00';

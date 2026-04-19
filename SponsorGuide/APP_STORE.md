@@ -129,7 +129,7 @@ Rationale:
 1. ✅ **Apple Team ID** — `67NB48YDBQ`, enrolled as Individual
 2. ✅ **Screenshots** — 3 captured, in `SponsorGuide/store-assets/screenshots/`
 3. ✅ **Bobby's approval** — both **written and verbal** approval obtained. Grant is a co-author of the guide (it was developed collaboratively with Bobby for the fellowship), so rights are clear.
-4. ✅ **Audio** — bundled audio files are **original re-recordings** read by a different speaker, covering the same Step Four column-by-column instructional content. No bbaworks.com audio is included. All references to bbaworks, presenter names, and source website have been stripped from the UI, data, and code. Additional blanket approval from the original bbaworks collaborators is being pursued independently.
+4. ✅ **Audio — disabled in v1 build.** Audio files were moved out of `assets/` into `SponsorGuide/.audio-staging/` (gitignored) so Metro does not bundle them. The Workshop Recordings card is commented out in `Step4OverviewScreen.js`. The `WorkshopAudioPlayer` component is still in the code but its `RECORDINGS` array is empty. To re-enable in v1.1: move files back, restore require() calls, uncomment the card. This keeps v1 small (~5MB instead of ~100MB) and removes any audio-rights risk from the initial submission.
 5. ❌ **EAS project initialization** — run `npx eas init` inside `SponsorGuide/`. Commits the generated `projectId`.
 6. ❌ **First iOS build** — `npx eas build --platform ios --profile preview` to get a TestFlight-installable `.ipa`.
 7. ⏳ **Listing copy pasted into App Store Connect** — see section below
