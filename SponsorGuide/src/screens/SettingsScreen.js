@@ -231,7 +231,12 @@ function GenerateCodeCard({ initialRole = 'sponsor', onDone, onCancel }) {
   const shareCode = async () => {
     try {
       await Share.share({
-        message: `Your pair code for the Beginners Sponsorship Guide app:\n\n${code}\n\nExpires in 15 minutes.`,
+        message:
+          `Your pair code for the Beginners Sponsorship Guide app:\n\n` +
+          `${code}\n\n` +
+          `This code expires in 15 minutes. Enter it in the app under Settings → "I have a code from someone."\n\n` +
+          `Don't have the app yet? Download it free:\n` +
+          `https://apps.apple.com/app/id6762534776`,
       });
     } catch (e) {}
   };

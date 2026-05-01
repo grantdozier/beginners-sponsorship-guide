@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SectionHeader, Card, OrangeLabel } from '../components/SectionCard';
@@ -73,18 +74,17 @@ export default function PartnerDashboardScreen({ route, navigation }) {
           </Card>
         ) : (
           inventories.map((inv) => (
-            <TouchableOpacity
-              key={inv.id}
-              activeOpacity={0.7}
-              onPress={() =>
-                navigation.navigate('PartnerInventory', {
-                  pairId,
-                  partner,
-                  type: inv.type,
-                })
-              }
-            >
-              <Card>
+            <Card key={inv.id}>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() =>
+                  navigation.navigate('PartnerInventory', {
+                    pairId,
+                    partner,
+                    type: inv.type,
+                  })
+                }
+              >
                 <View style={styles.row}>
                   <Text style={styles.ornament}>{ORNAMENTS[inv.type]}</Text>
                   <View style={{ flex: 1, marginLeft: 12 }}>
@@ -98,8 +98,36 @@ export default function PartnerDashboardScreen({ route, navigation }) {
                   </View>
                   <Text style={styles.chevron}>›</Text>
                 </View>
-              </Card>
-            </TouchableOpacity>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.dismissBtn}
+                onPress={() => {
+                  Alert.alert(
+                    'Remove this inventory?',
+                    `This unshares ${partner.display_name}'s ${LABELS[inv.type]}. Their inventory stays intact on their phone — they can re-share any time.`,
+                    [
+                      { text: 'Cancel', style: 'cancel' },
+                      {
+                        text: 'Remove',
+                        style: 'destructive',
+                        onPress: async () => {
+                          try {
+                            await api.unshareInventoryAsPartner(inv.type, pairId);
+                            setInventories((prev) =>
+                              prev.filter((i) => i.id !== inv.id),
+                            );
+                          } catch (err) {
+                            Alert.alert('Could not remove', err.message);
+                          }
+                        },
+                      },
+                    ],
+                  );
+                }}
+              >
+                <Text style={styles.dismissText}>Remove from my view</Text>
+              </TouchableOpacity>
+            </Card>
           ))
         )}
 
@@ -157,5 +185,16 @@ const styles = StyleSheet.create({
     fontFamily: 'PlayfairDisplay_400Regular_Italic',
     fontSize: 13,
     color: '#B44848',
+  },
+  dismissBtn: {
+    marginTop: 10,
+    paddingVertical: 6,
+    alignItems: 'flex-end',
+  },
+  dismissText: {
+    fontFamily: 'PlayfairDisplay_400Regular_Italic',
+    fontSize: 12,
+    color: '#8A5A5A',
+    textDecorationLine: 'underline',
   },
 });

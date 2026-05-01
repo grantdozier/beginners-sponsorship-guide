@@ -92,7 +92,7 @@ app.post('/:type/share', requireDeviceUser, async (c) => {
   return c.json(toDto(updated));
 });
 
-/** DELETE /inventories/:type/share — revoke sharing, keep inventory */
+/** DELETE /inventories/:type/share — revoke sharing (owner only) */
 app.delete('/:type/share', requireDeviceUser, async (c) => {
   const user = c.get('user');
   const typeResult = typeSchema.safeParse(c.req.param('type'));
@@ -105,6 +105,47 @@ app.delete('/:type/share', requireDeviceUser, async (c) => {
     .select()
     .from(inventories)
     .where(and(eq(inventories.ownerId, user.id), eq(inventories.type, type)))
+    .limit(1);
+
+  if (!inv) return c.json({ error: 'not_found', message: 'No inventory found' }, 404);
+
+  const [updated] = await db
+    .update(inventories)
+    .set({ isShared: false, sharedAt: null })
+    .where(eq(inventories.id, inv.id))
+    .returning();
+
+  return c.json(toDto(updated));
+});
+
+/**
+ * DELETE /inventories/:type/share/as-partner/:pairId
+ * Allows a sponsor (non-owner) to revoke sharing on their partner's inventory.
+ * Either party in a pair can unshare.
+ */
+app.delete('/:type/share/as-partner/:pairId', requireDeviceUser, async (c) => {
+  const user = c.get('user');
+  const typeResult = typeSchema.safeParse(c.req.param('type'));
+  if (!typeResult.success) {
+    return c.json({ error: 'invalid_type', message: 'Unknown inventory type' }, 400);
+  }
+  const type = typeResult.data;
+  const pairId = c.req.param('pairId');
+
+  // Verify requester is in this pair
+  const [pair] = await db.select().from(pairs).where(eq(pairs.id, pairId)).limit(1);
+  if (!pair) return c.json({ error: 'not_found', message: 'Pair not found' }, 404);
+  if (pair.sponsorId !== user.id && pair.sponseeId !== user.id) {
+    return c.json({ error: 'forbidden', message: 'Not your pair' }, 403);
+  }
+
+  // Find the partner's inventory (the other person in the pair)
+  const partnerId = pair.sponsorId === user.id ? pair.sponseeId : pair.sponsorId;
+
+  const [inv] = await db
+    .select()
+    .from(inventories)
+    .where(and(eq(inventories.ownerId, partnerId), eq(inventories.type, type)))
     .limit(1);
 
   if (!inv) return c.json({ error: 'not_found', message: 'No inventory found' }, 404);
